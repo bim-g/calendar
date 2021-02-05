@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>Calender</title>
+</head>
+<body>
+    <h1>CSS Calendar</h1>
+    <div class="month">      
+        <ul>
+            <li class="prev" onclick="start('prev')">&#10094;</li>
+            <li class="next" onclick="start('next')">&#10095;</li>
+            <li>
+            <span id="thisMonth">Janvier</span><br>
+            <span style="font-size:18px" id="thisYear">2021</span>
+            </li>
+        </ul>
+    </div>
+    <table >
+        <tr>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Thursday</th>
+            <th>Wenesday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+        </tr>
+        <tbody id="daysMonthtable">
+        </tbody>
+    </table>
+    <script src="./js/index.js"></script>
+</body>
+</html>
