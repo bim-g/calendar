@@ -69,5 +69,6 @@ tr:nth-child(even) {
 .active {
     padding: 5px;
     background: #1abc9c;
-    color: white !important
+    color: white !important;
+    cursor: pointer;
 }

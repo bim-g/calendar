@@ -1,50 +1,56 @@
 start();
 
-/**
- * 
- * @param {*} action //this is the action done buy the user {next,previuw}
- */
-function start(action) {
-    let days = ["mon", "tues", "wed", "thu", "fri", "sat", "sun"];
-    let months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "november", "decdember"];
-    let date = nextPreviusMonth(action) ? nextPreviusMonth(action) : new Date();
+function start(newDate) {
+    let days = ["mon", "tus", "wed", "thu", "fri", "sat", "sun"];
+    let months = ["january", "february", "march", "april", "may", "june", "july", "august", "september","october", "november", "december"];
+    let date= new Date();
+    if(newDate){
+        date =  new Date(newDate);
+    }
     let thisYear = date.getFullYear();
     let thisMonth = date.getMonth();
-    let todayDate = date.getDate();
-    let todayDay = date.getDay();
-    let dayofMonth = new Date(date.getFullYear(), date.getMonth(), 0);
+    let activeDay = date.getDate();    
     let daysOfMonth = new Date(thisYear, (thisMonth), 0).getDate();
-    let fistDayofThemonth = new Date(thisYear, (thisMonth), 1).getDay()
-    $("thisYear").innerHTML = thisYear;
-    $("thisMonth").innerHTML = months[thisMonth];
-    dispayDaystable(daysOfMonth, todayDate, fistDayofThemonth);
+    let fistDayofTheMonth = new Date(thisYear, (thisMonth), 1).getDay();
+    let data={
+        thisYear:thisYear,
+        thisMonth: months[thisMonth],
+        thisPrevDate: PreviusMonth(date.toDateString()),
+        thisNextDate: nextMonth(date.toDateString()),
+    };
+    let dateData = {
+        daysOfMonth:daysOfMonth,
+        activeDay:activeDay,
+        fistDayofTheMonth:fistDayofTheMonth
+    }
+    $("monthControl").innerHTML = displayControl(data);
+    dispayDaystable(dateData);
 }
 /**
  * 
  * @param {*} action // this actions allow to know whitch month we are in charge
  */
-function nextPreviusMonth(action) {
-    let prevDate = new Date();
-    switch (action) {
-        case "prev":
-            return new Date(prevDate.setMonth(prevDate.getMonth() - 1));
-            break;
-        case "next":
-            // return new Date(prevDate.setMonth(prevDate.getMonth() + 1));
-            break;
-        default:
-            return false;
-            break;
-    }
+function PreviusMonth(previesDate) { 
+    let preDate = new Date(previesDate);   
+    return new Date(preDate.setMonth(preDate.getMonth()-1)).toDateString();
+}
+function nextMonth(nextDate) { 
+    let preDate = new Date(nextDate);
+    return new Date(preDate.setMonth(preDate.getMonth()+1)).toDateString();
 }
 //
 /**
  * 
- * @param {*} days //this is the number of the days on the month
- * @param {*} active //is today date
- * @param {*} fistDayofThemonth //this is the first day of the selected month
+ * @param {*} daysOfMonth //this is the number of the days on the month
+ * @param {*} activeDay //is today date
+ * @param {*} fistDayofTheMonth //this is the first day of the selected month
  */
-function dispayDaystable(days, active, fistDayofThemonth) {
+function dispayDaystable(dateData) {
+    let {
+        daysOfMonth,
+        activeDay,
+        fistDayofTheMonth
+    }=dateData;
     $("daysMonthtable").innerHTML = "";
     let table = $("daysMonthtable");
     // create the first row
@@ -54,9 +60,9 @@ function dispayDaystable(days, active, fistDayofThemonth) {
     let cycleTable = 0;
     // cycle if counting how much days left before the end of the week
     let cycle = 0;
-    let today = fistDayofThemonth;
+    let today = fistDayofTheMonth;
     // manage the period when the first day of the month
-    // doent start on monday
+    // doesn't start on monday
     for (var y = 0; y < today - 1; y++) {
         // create emply cell, to manage days witch dobt belong to this month
         td = tr.insertCell(y);
@@ -64,10 +70,10 @@ function dispayDaystable(days, active, fistDayofThemonth) {
         cycle++;
     }
 
-    for (var i = 1; i <= days; i++) {
+    for (var i = 1; i <= daysOfMonth; i++) {
         // start create date according to the specify day of the week on the month
         let val = i < 10 ? `0${i}` : i;
-        if (active == i) {
+        if (activeDay == i) {
             td = tr.insertCell(cycle);
             td.innerHTML = `<span class="active">${val}</span>`;
         } else {
@@ -76,7 +82,7 @@ function dispayDaystable(days, active, fistDayofThemonth) {
         }
         cycle++;   
         //  check if it is the end of the week
-        //  then create another rwo for the next week,
+        //  then create another row for the next week,
         //  also initialize the cycle for the week
         if (cycle == 7) {
             cycle = 0;
@@ -89,4 +95,15 @@ function dispayDaystable(days, active, fistDayofThemonth) {
 
 function $(id) {
     return document.getElementById(id);
+}
+
+function displayControl(data){
+    let control=`<ul>
+        <li class = "prev" onclick = "start('${data.thisPrevDate}')" > &#10094;</li>
+        <li class= "next"  onclick = "start('${data.thisNextDate}')" > &#10095;</li>
+        <li>
+            <span style="font-size:38px" > ${data.thisMonth} </span><br> 
+            <span style="font-size:28px" > ${data.thisYear} </span> 
+        </li></ul>`;
+    return control;
 }
